@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
+import hashlib
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -8,6 +9,17 @@ app.config['MYSQL_PASSWORD'] = 'Nksk12@3'
 app.config['MYSQL_DB'] = 'products'
 
 mysql = MySQL(app)
+
+
+
+def create_table():
+     cur = mysql.connection.cursor()
+     cur.execute("CREATE TABLE IF NOT EXISTS Users (id INT AUTO_INCREMENT PRIMARY KEY ,username VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(50) NOT NULL, role VARCHAR(50))")
+     mysql.connection.commit()
+     cur.close()
+
+with app.app_context():
+    create_table()     
 
 @app.route('/')
 def getResult():
@@ -45,9 +57,10 @@ def addUser():
                 return jsonify({'error': 'Missing data'}), 400
         cur = mysql.connection.cursor()
         username = data['username']
-        password = data['password']
+        hashed_password = hashlib.md5(data['password'].encode('utf-8')).hexdigest()
         role = data['role']
-        cur.execute('''INSERT INTO Users (username,password,role) VALUES (%s, %s, %s)''', (username,password,role))
+        data['password'] = hashed_password
+        cur.execute('''INSERT INTO Users (username,password,role) VALUES (%s, %s, %s)''', (username,hashed_password,role))
         mysql.connection.commit()
         cur.close()
         return jsonify(data), 201
@@ -85,3 +98,6 @@ def deleteUser(id):
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+
