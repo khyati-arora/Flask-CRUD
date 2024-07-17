@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import json
 from flask_mysqldb import MySQL
 import hashlib
 app = Flask(__name__)
@@ -19,8 +20,17 @@ def create_table():
      cur.close()
 
 with app.app_context():
-    create_table()     
+    create_table()    
 
+def get_user_data(id): 
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT id,username,role FROM Users WHERE id = %s''', (id,))
+    data = cur.fetchall()
+    cur.close()
+    if not data:
+        return "not found"
+    return jsonify(data), 200
+  
 @app.route('/')
 def getResult():
    try:
@@ -38,13 +48,7 @@ def getResult():
 @app.route('/data/<int:id>')
 def get_user(id):
   try:  
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT id,username,role FROM Users WHERE id = %s''', (id,))
-    data = cur.fetchall()
-    cur.close()
-    if not data:
-        return jsonify({'error': 'User not found'}), 404
-    return jsonify(data)
+    return get_user_data(id)
   except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -76,7 +80,13 @@ def updateUser(id):
         if not data or not all(key in data for key in ('username', 'role')):
             return jsonify({'error': 'Missing data'}), 400
         
+        value = get_user_data(id)
+        
+        if value == "not found" : 
+            return jsonify({'error': 'Missing user'}), 404
+        
         cur = mysql.connection.cursor()
+
         username = data['username']
         role = data['role']
         cur.execute('''UPDATE Users SET username = %s, role = %s WHERE id = %s''', (username,role,id))
