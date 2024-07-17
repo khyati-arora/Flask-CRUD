@@ -9,7 +9,7 @@ This application is built using flask and allows to manage users in a database. 
    **Endpoint** : '/add'<br/>
    **Method** : POST
 
-   ![alt text](./screenshots/image5.png)
+   ![alt text](./screenshots/image__3.png)
 
 
 2. Get All Users : 
@@ -17,24 +17,25 @@ This application is built using flask and allows to manage users in a database. 
    **Endpoint** : '/' <br/>
    **Method** : GET
 
-   ![alt text](./screenshots/image1.png)
+   ![alt text](./screenshots/image__1.png)
 
 
 3. Get user with specific id : 
    **Endpoint** : '/data/{id}' <br/>
    **Method** : GET
 
-   ![alt text](./screenshots/image2.png)
+   ![alt text](./screenshots/image__2.png)
 
 4. Update User : 
    **Endpoint** : '/update/{id}' <br/>
    **Method** : PUT
 
-   ![alt text](./screenshots/image3.png)
+   ![alt text](./screenshots/image__4.png)
 
 5. Delete User :
     **Endpoint** : '/delete/{id}' <br/>
     **Method** : DELETE
 
-    ![alt text](./screenshots/image4.png)
+    ![alt text](./screenshots/image__5.png)
+
 
