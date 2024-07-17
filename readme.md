@@ -9,7 +9,7 @@ This application is built using flask and allows to manage users in a database. 
    **Endpoint** : '/add'<br/>
    **Method** : POST
 
-   ![alt text](./screenshots/image.png)
+   ![alt text](./screenshots/image5.png)
 
 
 2. Get All Users : 
